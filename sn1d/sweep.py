@@ -1,9 +1,9 @@
 import numpy as np
 from numba import njit
 
-from cp1.cornervalues import CornerValues
-from cp1.quadrature import Quadrature
-from cp1.xs import CrossSection
+from sn1d.cornervalues import CornerValues
+from sn1d.quadrature import Quadrature
+from sn1d.xs import CrossSection
 
 
 # solve the transport equation in a single cell, single angle, discretized with LD finite elements

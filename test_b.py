@@ -27,10 +27,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cp1.cornervalues import CornerValues
-from cp1.quadrature import Quadrature
-from cp1.source_iteration import solve_fixed_source
-from cp1.xs import CrossSection
+from sn1d.cornervalues import CornerValues
+from sn1d.quadrature import Quadrature
+from sn1d.source_iteration import solve_fixed_source
+from sn1d.xs import CrossSection
 
 # Directory to save plots
 OUT_DIR = Path(__file__).resolve().parent / "test_b"
