@@ -7,7 +7,7 @@ from sn1d.xs import CrossSection
 
 
 # solve the transport equation in a single cell, single angle, discretized with LD finite elements
-@njit
+@njit(cache=True)
 def ldSolve(
         mu : float, 
         dx : float,
@@ -93,8 +93,14 @@ def sweep(
     dx : np.array,
     BC : np.array,
     lhs_reflective : bool,
-    k=1
+    k=1,
+    lumped=False
 ):
+
+    if lumped==False:
+        solve = ldSolve
+    else:
+        solve = lumpedSolve
 
     M = quad.M
     I = len(dx)
@@ -118,7 +124,7 @@ def sweep(
                 psi_in = BC[m_neg]
             else : 
                 psi_in = psi[m_neg].L[i+1]
-            psi[m_neg].L[i], psi[m_neg].R[i]  = ldSolve(
+            psi[m_neg].L[i], psi[m_neg].R[i]  = solve(
                         quad.mu[m_neg], dx[i], psi_in, xs.total[i], 
                         xs.scatter[i], xs.fission[i], xs.multiplicity[i]/k, 
                         q[i], (phi.L[i], phi.R[i]))
@@ -136,7 +142,7 @@ def sweep(
                     psi_in = BC[m_pos]
             else:
                 psi_in = psi[m_pos].R[i-1]
-            psi[m_pos].L[i], psi[m_pos].R[i] = ldSolve(
+            psi[m_pos].L[i], psi[m_pos].R[i] = solve(
                 quad.mu[m_pos], dx[i], psi_in, xs.total[i], xs.scatter[i], 
                 xs.fission[i], xs.multiplicity[i]/k, 
                 q[i], (phi.L[i], phi.R[i]))
