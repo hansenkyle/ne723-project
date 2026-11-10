@@ -44,6 +44,44 @@ def ldSolve(
     else:
         return psi_r, psi_l
 
+# solve the transport equation in a single cell, single angle, discretized with lumped LD finite elements
+@njit
+def lumpedSolve(
+        mu : float, 
+        dx : float,
+        psi_in : float, # upwind angular flux (BC or neighboring cell)
+        xs_t : float,
+        xs_s : float,
+        xs_f : float,
+        nu_f : float,
+        q    : float,
+        phi  : tuple   # expected in (L, R) format. this function re-orders as necessary
+):
+    s_eff = (xs_s + nu_f*xs_f)
+    m = abs(mu)
+    if mu<0:
+        phi_l = phi[1]
+        phi_r = phi[0]
+    else:
+        phi_l = phi[0]
+        phi_r = phi[1]
+    psi_l = (
+                dx**2 * xs_t * (q+s_eff*phi_l) 
+                + (4*m**2 * psi_in) 
+                + (dx*m*(s_eff*(phi_l - phi_r) + 4*xs_t*psi_in))
+             )/(
+                2*(2*m**2 + 2*dx*m*xs_t + dx**2 * xs_t**2)
+             )
+    psi_r = (
+                dx*(q + (s_eff*phi_l) - (2*xs_t*psi_l))
+            )/(
+                2*m
+            ) + (2*psi_in) - psi_l
+    if mu>0:
+        return psi_l, psi_r
+    else:
+        return psi_r, psi_l
+
 
 # sweep all angles, all cells, given known scattering and external source.
 @njit
