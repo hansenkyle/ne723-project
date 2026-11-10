@@ -45,17 +45,17 @@ def solve_fixed_source(
     rho = np.array([1.0])
 
     # while not converged:
-    l = 0
+    s = 0
     while (delta[-1] > (epsilon_phi * ((1/rho[-1]) - 1))):
-        l += 1
-        if l% update_interval == 0:
-            print(f"Iteration {l}...")
+        s += 1
+        if s% update_interval == 0:
+            print(f"Iteration {s}...")
         # solve for angular and scalar flux given known scattering source
         psi, phi_new = sweep(phi, q, xs, quad, dx, BC, lhs_reflective)
 
         # compute Delta
         delta = np.append(delta, (phi_new - phi).norm_inf())
-        rho = np.append(rho, delta[l]/delta[l-1])
+        rho = np.append(rho, delta[s]/delta[s-1])
 
         # if converged; compute residuals and exit.
         
@@ -109,4 +109,4 @@ def solve_fixed_source(
     iterative_residuals = Residuals(iterative_balance, iterative_firstmoment)
 
 
-    return Solution(phi, psi, cell_edge_scalar, cell_edge_current), Convergence(l, delta, rho), scheme_residuals, iterative_residuals
+    return Solution(phi, psi, cell_edge_scalar, cell_edge_current), Convergence(s, delta, rho), scheme_residuals, iterative_residuals
