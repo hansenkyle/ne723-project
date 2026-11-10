@@ -13,8 +13,12 @@ Region 1: [0, 1] cm
     sigma_f = 0.3 cm-1
     nu_f = 2
 """
-
+import sys
 from pathlib import Path
+
+parent_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(parent_dir))
+
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
