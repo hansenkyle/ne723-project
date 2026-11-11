@@ -245,13 +245,11 @@ def solve_fixed_source(
         # QD solve
         old_phi_center = phi_i.copy()
         phi_i, phi_b, J_b = _solve_loqd(q, xs, dx, J_in, phi_in, E_b, E_c, C_0, C_X, lhs_reflective)
-        print(phi_i)
-
+        
+        delta = np.append(delta, np.max(np.abs(phi_i - old_phi_center)))
         if s > 2:
-            delta = np.append(delta, np.max(np.abs(phi_i - old_phi_center)))
             rho = np.append(rho, delta[-1]/delta[-2])
         else:
-            delta = np.append(delta, 1.0)
             rho = np.append(rho, 0.5)
 
     scheme_balance = np.longdouble(J_b[1:]) - np.longdouble(J_b[:-1]) \
