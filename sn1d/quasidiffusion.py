@@ -13,7 +13,12 @@ from matplotlib.pyplot import show as show
 import matplotlib
 matplotlib.use('Qt5Agg')
 
-
+class Closure:
+    def __init__(self, E_center, E_edge, C_0, C_X):
+        self.E_center = E_center
+        self.E_edge = E_edge
+        self.C_0 = C_0
+        self.C_X = C_X
 
 def _solve_loqd(
     q : np.array,
@@ -256,4 +261,4 @@ def solve_fixed_source(
     print(scheme_balance)
 
 
-    return Solution(phi_i, psi, phi_b, J_b), Convergence(s, delta, rho)
+    return Solution(phi_i, psi, phi_b, J_b), Convergence(s, delta, rho), Closure(E_c, E_b, C_0, C_X)
