@@ -84,6 +84,7 @@ for n in [0, 1]:
     xs = CrossSection(sigma_t, sigma_s, 0*sigma_s, 0*sigma_s)
 
     soln, convergence, closures = solve_fixed_source(epsilon_phi, q, xs, quad, dx, bc, False, update_interval=1)
+    phi_avg = (1.0/6)*(4*soln.phi + soln.phi_edge[1:] + soln.phi_edge[:-1])
 
     file = h5py.File(f"{NAME}{n+1}.h5", "w")
 
@@ -100,6 +101,8 @@ for n in [0, 1]:
     gsoln = file.create_group("solution")
     gsoln.create_dataset("scalar-flux/cell-center", data= soln.phi)
     gsoln.create_dataset("scalar-flux/cell-edge", data= soln.phi_edge)
+    gsoln.create_dataset("scalar-flux/cell-average", data=phi_avg)
+
     gsoln.create_dataset("angular_flux/cell-center", data= np.array([soln.psi[m].cell_average() for m in range(n_mu*2)]))
     gsoln.create_dataset("current/cell-edge", data = soln.J_edge)
 
