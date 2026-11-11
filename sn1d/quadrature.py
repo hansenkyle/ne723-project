@@ -13,8 +13,6 @@ spec = [
 
 @jitclass(spec)
 class Quadrature:
-
-
     # Constructor method to initialize instance attributes
     def __init__(self, mu, w):
         epsilon = 1e-6
@@ -35,5 +33,22 @@ class Quadrature:
         #     raise ValueError(f"sum(w) must be == 2 (got {sum_w:.8e})")
 
         self.M = len(mu)
+
+def doubleGL(N : int): 
+    [mu_half, w_half] = np.polynomial.legendre.leggauss(N)
+
+    # shift angles
+    mu_neg = (mu_half/2) - 0.5
+    mu_pos = (mu_half/2) + 0.5
+
+    # normalize weights
+    w_neg = w_half/2
+    w_pos = w_half/2
+
+    mu = np.concat((mu_neg, mu_pos))
+    w = np.concat((w_neg, w_pos))
+
+    return Quadrature(mu, w)
+
 
     
