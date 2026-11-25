@@ -83,7 +83,7 @@ phi_initial = CornerValues(np.zeros(n_x), np.zeros(n_x))
 
 
 print("solving test A fixed source problem...")
-solution, convergence, scheme, iterative = solve_fixed_source(epsilon_phi, phi_initial, q, xs, quad, dx, bc, is_reflective, 100)
+solution, convergence, scheme, iterative = solve_fixed_source(epsilon_phi, phi_initial, q, xs, quad, dx, bc, is_reflective, update_interval=100)
 
 # Output and Plots
 
